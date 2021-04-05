@@ -1,0 +1,22 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    create page
+{% endblock %}
+
+{% block body %}
+    <h3>edit {{title}} page</h3>
+    <hr>
+   	<form  class="row-2" action="{% url 'encyclopedia:save' %} " method="POST">
+   		{% csrf_token %}
+
+   		<input type="hidden" id="entry-title" name="entry-title" value="{{title}}">
+		<div class="form-group col-8">
+		  <textarea class="form-control" id="entry-content" name="entry-content" rows="10" placeholder="type your content in markdown form">{{content}}</textarea>
+		</div>
+
+		<div class="form-group col-8">
+			<button type="submit" class="btn btn-primary mb-2">save</button>
+		</div>
+    </form>
+{% endblock %}
