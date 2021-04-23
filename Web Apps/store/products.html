@@ -1,0 +1,46 @@
+{% extends 'store/layout.html' %}
+
+
+{% block title %}Products{% endblock %}
+
+{% block main %}
+  <!-- MAIN CONTAINER -->
+    <div class="container">
+          {% if products|length <= 1 %}
+            <section class="banner align-center center">
+              <div class="category">
+                <img alt="{{products.name}}" src="/media/{{products.image}}" />
+                <div class="category-text">
+                  <h3>{{products.name}}</h3>
+                  <div>
+                    <h4>Price: {{products.price}}$</h4>
+                    <b>Stoks: {{products.stoks}}</b>
+                  </div>
+                  <form action="/product/{{products.id}}/" method="POST"> {% csrf_token %}
+                    <label> Buy Stoks
+                      <input class="search-box" name="amount" aria-label="n-stoks" placeholder="How Many stoks you need" type="number" pattern="[0-9]+" min="0" value="0">  
+                    </label>
+                  </form>
+                </div>
+              </div>
+            </section>
+          {% else %}
+          <section class="banner align-center center">
+            {% for p in products %}
+              <div class="category">
+                <a href="/product/{{p.id}}">
+                  <img alt="{{p.name}}" src="/media/{{p.image}}" />
+                  <div class="category-text">
+                    <h3>{{p.name}}</h3>
+                    <div>
+                      <h4>Price: {{p.price}}$</h4>
+                      <b>Stoks: {{p.stoks}}</b>
+                    </div>
+                  </div>
+                </a>
+              </div>
+          {% endfor %}
+          {% endif %}
+      </section>
+    </div>
+{% endblock %}

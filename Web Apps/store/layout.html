@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Carved Rock Fitness: {% block title %}{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <link href="{% static 'store/css/main.css' %}" rel="stylesheet">
+</head>
+<body>
+ {% include "store/message.html" %}
+  <!-- NAVIGATION -->
+  <nav class="header-nav">
+    <div class="container flex space-between">
+      <!-- BRANDING -->
+      <div class="flex align-center brand">
+        <a href="{% url 'store:index' %}">
+          <img class="logo" alt="Carved Rock Fitness" src="{% static 'store/img/carved-rock-logo.png' %}">
+        </a>
+      </div>
+      <!-- SEARCH -->
+      <div class="flex flex-one align-center ">
+        <div>
+          <form action="{% url 'store:search' %}" method="POST"> {% csrf_token %}
+            <input class="search-box" aria-label="Search" name="name" placeholder="What can we help you find?" type="search">
+            <button class="search-button" type="submit">SEARCH</button>
+          </form>
+          <ul class="nav-list hd-nav flex">
+            <li><a href="/products/footwear">Footwear</a></li>
+            <li><a href="/products/climbing-geers">Climbing Geers</a></li>
+            <li><a href="/products/safety">Safety</a></li>
+            <li><a href="/products/backpacks">Backpacks</a></li>
+            <li><a href="/products/kayaks">Kayaks</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+    <!-- HERO -->
+  <section class="hero">
+    <div class="container flex flex-column align-center center">
+      <h1>Get A Grip</h1>
+      <h2>20% Off</h2>
+      <p>Throughout The Season</p>
+    </div>
+  </section>
+
+  {% block main %}
+  {% endblock %}
+
+  <!-- FOOTER -->
+  <footer>
+    <section class="lists container space-between">
+      <div>
+        <div class="link-header text-primary">Customer Support</div>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Order Tracker</a></li>
+          <li><a href="#">Returns &amp; Refunds</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Store Locator</a></li>
+          <li><a href="#">Site Map</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="link-header text-primary">Company Info</div>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Affiliates</a></li>
+          <li><a href="#">Students</a></li>
+          <li><a href="#">Mobile Apps</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="link-header text-primary">Privacy &amp; Terms</div>
+        <ul>
+          <li><a href="#">Privacy &amp; Security</a></li>
+          <li><a href="#">Statement</a></li>
+          <li><a href="#">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+      <div class="social">
+        <div class="link-header text-primary">Follow Us</div>
+        <ul>
+          <li><a class="twitter" href="https://twitter.com/elhaatem" target="_blank"></a></li>
+          <li><a class="facebook"  href="https://www.facebook.com/elhaatemfci" target="_blank"></a></li>
+          <li><a class="instagram" href="https://www.instagram.com/elhaatem/" target="_blank"></a></li>
+          {# <li><a class="github"  href="https://github.com/el-hatem" target="_blank"></a></li> #}
+        </ul>
+        <div class="newsletter">
+          <div class="link-header">Email Updates</div>
+          <div class="link-subheader">Exclusive sales, special offers, and more.</div>
+          <form action="{% url 'store:index' %}" method="POST"> {% csrf_token %}
+              <input class="form-control" type="email" name='signup' placeholder="Enter email address" />
+              <button class="btn btn-primary" type="submit">Sign up</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- PS DEMO -->
+    <section class="ps">
+      <div class="flex flex-column align-center">
+        
+        <div class="demo">This site is created for demonstrative purposes only and does not offer any real products or services.</div>
+      </div>
+    </section>
+
+    <div class="copyright text-primary">&copy;AhmedHatem 2021</div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% if messages %}
+	{% for message in messages %}
+		<h3 id="messageId" class="alert">{{message}}</h3>
+	    <script type="text/javascript">
+	    	var x = document.querySelector('h3#messageId');
+	    	timer = setTimeout(function(){
+	    		x.remove();
+	    		delete timer;
+	    	}, 3000);
+	    </script>
+	{% endfor %}
+{% endif %}
