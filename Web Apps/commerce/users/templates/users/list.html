@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}my listings{% endblock %}
+{% block main %}
+    <h2>My Listings</h2>
+<div class="row ">
+{% for list in lists%}
+   <div class="col-sm-9 col-md-4 col-lg-4 mt-4">
+	<div class="card" style="width: 18rem;">
+		{% if  list.image_url %}
+			<img class="card-img-top" src="{{list.image_url}}" alt="Card image cap">
+		{% else %}
+			<img class="card-img-top" src="https://www.triequestrian.ie/pub/media/catalog/product/placeholder/default/No-images-placeholder_1.png" alt="Card image cap">
+		{% endif %}
+
+	  <div class="card-body">
+	    <h5 class="card-title">{{list.title|safe}}</h5>
+	    <p class="card-text">{{list.description|safe}}</p>
+	  </div>
+	  <ul class="list-group list-group-flush">
+	  	<li class="list-group-item"><h6>currently: {{list.price|safe}}$</h6></li>
+	  	<li class="list-group-item"><small>created at: </small>{{list.created_at}}</li>
+	    <li class="list-group-item"><small>Ctegory: </small><a href="{% url 'auctions:category' list.category.name %}" class="card-link">{{list.category|safe}}</a></li>	    
+	  </ul>
+	  <div class="card-body">
+	    <small>Created by: </small>{{list.created.get}}
+	  </div>
+	</div>
+  </div>
+<!-- in case ther is no active listings-->
+{% empty %}
+	<hr>
+   	<h3>sorry!! there are no active lists now</h3>
+   	<hr>
+{% endfor %}
+</div>
+{% endblock %}
