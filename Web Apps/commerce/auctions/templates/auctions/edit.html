@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    edit
+{% endblock %}
+
+{% block main %}
+
+  {% include "message.html" %} 
+      
+  <hr>
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
+<form action="{% url 'auctions:edit' list.id %}" method="POST"> {% csrf_token %}
+	<table>
+		{% crispy form %}
+	</table>
+  <input class="btn btn-warning" type="submit" value="Save edit">
+
+</form>
+<hr>
+{% endblock %}
+

@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %} {{list.title}} {% endblock %}
+
+{% block main %}
+{% include "message.html" %}
+
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-4 mx-auto p-2">
+	<div class="card" style="width: 18rem;">
+		{% if  list.image_url %}
+			<img class="card-img-top" src="{{list.image_url}}" alt="Card image cap">
+		{% else %}
+			<img class="card-img-top" src="https://www.triequestrian.ie/pub/media/catalog/product/placeholder/default/No-images-placeholder_1.png" alt="Card image cap">
+		{% endif %}
+
+		<div class="card-body">
+		  <h5 class="card-title">{{list.title|safe}}
+		  	{% if list.state %}
+		    	<button type="button" class="btn btn-success btn-sm mt-1">opened</button>
+		    {% else %}
+		    	<button type="button" class="btn btn-danger btn-sm mt-1" disabled="true">closed</button>
+		    {% endif %}
+		  </h5>
+		</div>
+		<ul class="list-group list-group-flush">
+		 <li class="list-group-item"><h6>currently: {{list.price|safe}}$</h6></li>
+		 <li class="list-group-item"><small>created at: </small>{{list.created_at}}</li>
+		  <li class="list-group-item"><small>Category: </small><a href="{% url 'auctions:category' list.category.name %}" class="card-link">{{list.category|safe}}</a></li>	    
+		</ul>
+		<div class="card-body">
+		  <small>Created by: </small>{{list.user.username}}
+		</div>
+	</div>
+  </div>
+  <div class="col-sm-12 col-md-9 col-lg-8 mx-auto p-2">
+  	<div class="row card text-center">
+  		<div class="card-header">
+    		<b>Current Price</b>
+  		</div>
+	    <div class="card-body">
+	      <h5 class="card-title">{{list.price|safe}}$</h5>
+	      <p class="card-text">[2 bids]</p>
+	    {% if list.state %}
+	      	{% include "running-bid.html" %}
+	    {% else %}
+	      {% include "closed-bid.html" %}
+	   {% endif %}
+	   </div>
+    </div>
+
+	<div class="row mt-4 p-0">
+      <div class="card-body ">
+		<h5 class="card-title">description</h5>
+		 <hr>
+		 <p class="card-text">{{list.description|safe}}</p>
+		 <hr>
+	   </div>
+     </div>
+	</div>
+  </div>
+</div>
+
+<div class="row mt-4 p-2">
+	<div class="card col-12">
+	  <div class="card-header flex d-flex">
+			Comments
+	  </div>
+	  <div class="card-body">
+	   {% for comment in  comments %}
+	     <blockquote class="blockquote mb-0">
+		  <header class="blockquote-footer">
+		   by: {{comment.user.username|safe}} 
+		   <cite> {{comment.created_at}}</cite></header>
+		  <p>{{comment.description|safe}}</p>
+		  </blockquote>
+		{% empty %}
+		<h3>no comments right now</h3>
+	   {% endfor %}
+	  </div>
+	</div>
+</div>
+{% include "comment.html" %}
+{% endblock %}

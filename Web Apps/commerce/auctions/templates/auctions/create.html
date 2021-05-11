@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    create
+{% endblock %}
+
+
+
+{% block main %}
+
+  {% include "message.html" %} 
+      
+  <h3>Create New Listing</h3>
+  <hr>
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
+
+<form action="{% url 'auctions:create' %}" method="POST">
+	<table>
+		{% crispy form %}
+	</table>
+  <input class="btn btn-warning" type="submit" value="Create">
+
+</form>
+	<hr>
+{% endblock %}
+
+
+
