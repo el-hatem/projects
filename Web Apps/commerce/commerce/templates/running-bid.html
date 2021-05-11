@@ -1,0 +1,46 @@
+{% if request.user.is_authenticated %}
+<div class="forms row">
+	<div class="col-12">
+	  <form action="{% url 'auctions:bid' list.id %}" method="POST"> {% csrf_token %}
+	    <div class="form-group">
+		  <input type="number" class="form-control text-center" id="bid" name="bid" min="0" step="any">
+		  <small id="emailHelp" class="form-text text-muted">enter more than {{list.price|safe}}$</small>
+        </div>
+	    <button type="submit" style="width: 50%;" class="btn btn-warning">Place bid</button>
+	  </form>
+	</div>
+	<div class="col-12">
+	   <form action="{% url 'auctions:modify_watchlist' list.id %}" method="GET">
+		 {% if list in watch_lists %}
+			<input type="hidden" name="state" value="False">
+		    <button type="submit" id="watch-btn" style="width: 80%;" class="btn mt-4 btn btn-outline-danger">remove from watchlist</button>  
+		  {% else %}
+			  <input type="hidden" name="state" value="True">
+		      <button type="submit" id="watch-btn" style="width: 80%;" class="btn mt-4 btn btn-outline-primary">Add to watchlist</button> 
+		   {% endif %}  
+	   </form>
+	</div>
+	<div class="col-12 flex d-flex justify-content-center">
+	   {% if  request.user == list.user %}
+	     <div class="row">
+		    <div class="col-4 mr-4">
+			  <form action="{% url 'auctions:edit' list.id %}" method="GET"> 
+				<button type="submit" id="edit-btn" name="edit-btn"  class="btn mt-4 btn btn-primary">edit list</button> 
+			  </form>
+			</div>
+			<div class="col-4 mr-4">
+			 <form action="{% url 'auctions:close' list.id %}" method="GET">
+			    <button type="submit" id="close-btn" name="close-btn"  class="btn mt-4 btn btn-danger">close bid</button> 
+		      </form>
+		     </div>
+	     </div>
+	   {% endif %}
+   </div>
+</div>
+{% else %}
+<div class="row">
+ <div class="col-12">
+    <input type="text" class="form-control text-center bg-warning" id="message" name="message" readonly value="login to share in this bid">
+</div>
+</div>
+{% endif %}
