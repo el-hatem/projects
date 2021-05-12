@@ -1,0 +1,9 @@
+body {
+	color: white;
+	background-image: linear-gradient(to right, #712828, #372E7D);
+	max-width: 800px;
+	width: 80%;
+	margin: 0 auto;
+	padding: 5px;
+	font-family: 'Itim', cursive;
+}
