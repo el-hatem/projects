@@ -3,7 +3,7 @@
 
 ---
 
-Compiler for Jack language (project 10-11 of [nand2tetris course](<https://www.nand2tetris.org/>))
+Compiler for Jack, java like object oriented based language
 Translates Jack code to HACK assembly code.
 
 ---
