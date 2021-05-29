@@ -3,7 +3,7 @@
 
 ---
 
-Compiler for Jack, java like object oriented based language
+Compiler for Jack, a.k.a java  object oriented based language
 Translates Jack code to HACK assembly code.
 
 ---
