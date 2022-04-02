@@ -1,0 +1,415 @@
+{% extends 'chat/base.html' %} 
+{% load static %} 
+
+{% block header %} 
+	<link href="{% static 'css/chat.css' %}" rel="stylesheet">
+<style>
+    #user-list a.bg-dark {
+        background-color: rgb(107, 107, 107) !important;
+    }
+    
+    .list-group-item {
+        cursor: pointer
+    }
+    
+    .chat-bubble {
+        min-width: 40%;
+        max-width: 80%;
+        padding: 5px 15px;
+    }
+    
+    #user-list a:hover * {
+        text-decoration: unset;
+    }
+    
+    .chat-box {
+        overflow: auto;
+        max-width: 100%;
+    }
+	    .errspan {
+        float: left;
+        margin-right: 6px;
+        margin-top: -30px;
+        position: relative;
+        z-index: 2;
+        color: red;
+    }
+
+	
+</style>
+{% endblock %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
+
+<div class="messaging">
+      <div class="inbox_msg">
+	  <!--right bar -->
+        <div class="inbox_people">
+		<!--search header-->
+          <div class="headind_srch">
+            <div class="recent_heading">
+              <h4>Recent</h4>
+            </div>
+            <div class="srch_bar">
+              <div class="stylish-input-group">
+                <input type="text" class="search-bar"  placeholder="Search" >
+                <span class="input-group-addon">
+                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                </span> </div>
+            </div>
+          </div>
+		  <!--end search -->
+		  
+          <div class="inbox_chat">
+		  <!--users list-->
+		  {% for u in users %} {% if not u.id == 1 and not u.id == user.id %}
+            <div class="chat_list {% if u.id == chat_id %}active_chat{% endif %} ">
+              <div class="chat_people">
+                <div class="chat_img"> <img src="{{u.user_profile.image.url}}" alt="sunil"> </div>
+				<a  href="{% url 'chat-home' %}?u={{u.id}}">
+                <div class="chat_ib">
+                  <h5>{{u.username}} <span class="chat_date">{% if u.last_login %}{{u.last_login}} {% else %}last seen not determined{% endif %}</span></h5>
+                  
+                </div>
+				</a>
+              </div>
+            </div>
+			{% endif %} {% endfor %}
+		  <!--end user list-->
+          </div>
+		</div>
+		<!--end right bar -->
+		
+		<!--left bar -->
+        <div class="mesgs">
+		  {% if not chat_id > 0 %}
+			<div class="msg_history">
+				<div class="h-100 d-flex flex-column justify-content-center align-items-center">
+					<h3 class="text-dark">Start Chat now</h3>
+					<p><small class="text-muted">Please select a person to chat with.</small></p>
+				</div>
+			</div>
+		  {% else%}
+			<!--START History-->
+			<div class="chat-box msg_history">
+				{% for chat in chats %} 
+					{% if chat.user_from == user %}
+						<!--I SEND message -->
+						<div class="outgoing_msg mb-5">
+						  <div class="sent_msg chat-bubble" data-id="{{chat.id}}">
+							<!-- Gallery -->
+							<div class="row text-center text-lg-start">
+									
+									{% if chat.file.url|extenize in 'mp4, avi, ogg' %}
+									<!--start media -->
+									<div class="col-lg-12 col-md-12 col-sm-12">
+									  <a href="#" class="d-block mb-4 h-100">
+										<video width="320" height="240" controls >
+											<source src="{{chat.file.url}}" type="video/mp4">
+											<source src="{{chat.file.url}}" type="video/ogg">
+
+											Your browser does not support the Video tag.										  
+										</video>
+									  </a>
+									</div>
+									{% elif chat.file.url|extenize in 'mp3, mpeg, ogg' %}
+									<div class="col-lg-12 col-md-12 col-sm-12">
+									  <a href="#" class="d-block mb-4 h-100">
+										<audio controls>
+											<source src="{{chat.file.url}}" type="audio/ogg">
+											<source src="{{chat.file.url}}" type="audio/mpeg">
+											Your browser does not support the audio tag.
+										</audio>
+									  </a>
+									</div>	
+									{% elif chat.file.url|extenize in 'jpg, png, svg, jpeg, gif' %}
+									<div class="col-lg-12 col-md-12 col-sm-12">
+									  <a href="#" class="d-block mb-4 h-100">
+										<img src="{{chat.file.url}}" alt="image">
+									  </a>
+									</div>	
+									{% endif %}
+									<!--end media-->
+							</div>
+							<!-- End Gallery -->
+							<p>{{chat.message}}</p>
+							<span class="time_date">{{chat.date_created|date:"M-d-Y H:i"}}</span>
+						  </div>
+						</div>
+						<!--END  I SEND message-->
+					{% else %}
+					<!--I RECIEVED message -->
+					<div class="incoming_msg mb-5">
+					  <div class="incoming_msg_img"> <img src="{{chat.user_from.user_profile.image.url}}" alt="sunil"> </div>
+					  <div class="received_msg">
+						<div class="received_withd_msg chat-bubble"  data-id="{{chat.id}}">
+								{% if chat.file.url|extenize in 'mp4, avi, ogg' %}
+								<!--start media -->
+								<div class="col-lg-12 col-md-12 col-sm-12">
+								  <a href="#" class="d-block mb-4 h-100">
+									<video width="320" height="240" controls >
+										<source src="{{chat.file.url}}" type="video/mp4">
+										<source src="{{chat.file.url}}" type="video/ogg">
+
+										Your browser does not support the Video tag.										  
+									</video>
+								  </a>
+								</div>
+								{% elif chat.file.url|extenize in 'mp3, mpeg, ogg' %}
+								<div class="col-lg-12 col-md-12 col-sm-12">
+								  <a href="#" class="d-block mb-4 h-100">
+									<audio controls>
+										<source src="{{chat.file.url}}" type="audio/ogg">
+										<source src="{chat.file.url}" type="audio/mpeg">
+										Your browser does not support the audio tag.
+									</audio>
+								  </a>
+								</div>	
+								{% elif chat.file.url|extenize in 'jpg, png, svg, jpeg, gif' %}
+								<div class="col-lg-12 col-md-12 col-sm-12">
+								  <a href="#" class="d-block mb-4 h-100">
+									<img src="{{chat.file.url}}" alt="image">
+								  </a>
+								</div>	
+								{% endif %}
+								<!--end media-->
+							<div class="row"><p>{{chat.message}}</p></div> 
+						  <span class="time_date"> {{chat.date_created|date:"M-d-Y H:i"}}</span>
+						  </div>
+					  </div>
+					</div>
+					<!--END i RECIEVED message-->
+				{% endif %} {% endfor %}
+			</div>
+			<!--END History-->
+			
+			<!--START type message-->
+			<div class="type_msg">
+				<form action="" id="chat-submit" enctype="multipart/form-data">
+				   <input type="hidden" name="user_from" value="{{ user.id }}">
+					<input type="hidden" name="user_to" value="{{ chat_id }}">
+					<div class="input_msg_write">
+					<div class="input-group mb-3">
+					  <div class="input-group-prepend">
+						<span class="input-group-text">
+							<label for="file"> 
+								<i class="fa fa-paperclip" aria-hidden="true">
+								<input type="file" id="file" name="file"  hidden multiple />
+								</i>
+							</label>
+						</span>
+						
+					  </div>
+					  <input type="text" name="message" class="form-control border border-dark"" placeholder="type a message" aria-label="message" aria-describedby="button-addon2" required  oninvalid="this.setCustomValidity('please type a message!!')">
+					  <button class="btn btn-outline-secondary"><i class="text-info fas fa-paper-plane" aria-hidden="true"></i></button>
+					  
+					</div>
+					</div>
+				</form>
+			</div>
+			<!--END type message-->
+			{% endif %}
+        </div>
+		<!--end left bar -->
+	</div>
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'js/chat.js' %}"></script>
+
+<script>
+    $(function() {
+        if ($('.chat-bubble:last').length > 0) {
+            $('.chat-box').animate({
+                scrollTop: $('.chat-bubble:last').offset().top
+            }, 'fast')
+        }
+        $('#chat-submit').submit(function(e) {
+            e.preventDefault()
+            start_loader()
+			var data = new FormData(this);
+			
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}',
+					
+
+                },
+                url: "{% url 'chat-send' %}",
+                method: "POST",
+                data: data,
+				contentType: false,
+				processData: false,
+                error: err => {
+                    console.log(err)
+                    alert('an error occured')
+                },
+                success: function(resp) {
+					console.log(resp)
+                    if (typeof resp == "object" && resp.status == 'success') {
+                        location.reload()
+                    } else {
+                        consol.log(resp)
+                        alert('an error occured')
+                    }
+                }
+            })
+
+
+
+        })
+        chats_renew()
+        setInterval(() => {
+            chats_renew()
+        }, 2500)
+
+    })
+
+    function chats_renew() {
+        var last_id = 0
+        if ($('.chat-bubble').length > 0)
+            last_id = $('.chat-bubble:last').attr('data-id')
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}',
+				
+            },
+            url: "{% url 'chat-renew' %}",
+            method: "POST",
+            data: {
+                last_id: last_id,
+                user_id: '{{user.id}}',
+                chat_id: '{{chat_id}}'
+            },
+            dataType: 'json',
+            error: err => {
+                console.log(err)
+                    // alert('an error occured')
+            },
+            success: function(resp) {
+                if (Object.keys(resp).length > 0) {
+                    Object.keys(resp).map(k => {
+                        if (resp[k].id.user_from !== '{{user.id}}') 
+						{
+							if (resp[k].file) {
+								if (resp[k].exten == 0) {
+									bubble = `
+									<div class="incoming_msg mb-5">
+									  <div class="incoming_msg_img"> <img src="${resp[k]['sender_profile']}" alt="sunil"> </div>
+									  <div class="received_msg">
+										
+										<div class="received_withd_msg chat-bubble" data-id="${resp[k].id}">
+											<!-- Gallery -->
+											<div class="row text-center text-lg-start">
+
+												<!--start media -->
+												<div class="col-lg-12 col-md-12 col-12">
+												  <a href="#" class="d-block mb-4 h-100">
+													<img class="img-fluid img-thumbnail" src="${resp[k].file}" alt="">
+												  </a>
+												</div>
+												<!--end media-->
+											</div>
+											<!-- End Gallery -->
+											<div class="row"><p>${resp[k].message}</p></div> 
+										  <span class="time_date"> ${resp[k].date_created}</span>
+										  </div>
+									  </div>
+									</div>`;
+								
+								} else if (resp[k].exten == 1) {
+									bubble = `
+										<div class="incoming_msg mb-5">
+										  <div class="incoming_msg_img"> <img src="${resp[k]['sender_profile']}" alt="sunil"> </div>
+										  <div class="received_msg">
+											
+											<div class="received_withd_msg chat-bubble" data-id="${resp[k].id}">
+												<!-- Gallery -->
+												<div class="row text-center text-lg-start">
+													<div class="col-lg-12 col-md-12 col-sm-12">
+													  <a href="#" class="d-block mb-4 h-100">
+														<audio controls>
+															<source src="${resp[k].file}" type="audio/ogg">
+															<source src="${resp[k].file}" type="audio/mpeg">
+															Your browser does not support the audio tag.
+														</audio>
+													  </a>
+													</div>
+												</div>
+												<!-- End Gallery -->
+												<div class="row"><p>${resp[k].message}</p></div> 
+											  <span class="time_date"> ${resp[k].date_created}</span>
+											  </div>
+										  </div>
+										</div>`;
+								
+								} else if (resp[k].exten == 2) {
+									bubble = `
+										<div class="incoming_msg mb-5">
+										  <div class="incoming_msg_img"> <img src="${resp[k]['sender_profile']}" alt="sunil"> </div>
+										  <div class="received_msg">
+											
+											<div class="received_withd_msg chat-bubble" data-id="${resp[k].id}">
+												<!-- Gallery -->
+												<div class="row text-center text-lg-start">
+													<!--start media -->
+													<div class="col-lg-12 col-md-12 col-sm-12">
+													  <a href="#" class="d-block mb-4 h-100">
+														<video width="320" height="240" controls >
+															<source src="${resp[k].file}" type="video/mp4">
+															<source src="${resp[k].file}" type="video/ogg">
+
+															Your browser does not support the Video tag.										  
+														</video>
+													  </a>
+													</div>
+												</div>
+												<!-- End Gallery -->
+												<div class="row"><p>${resp[k].message}</p></div> 
+											  <span class="time_date"> ${resp[k].date_created}</span>
+											  </div>
+										  </div>
+									</div>`;
+								
+								
+								}
+								
+							
+							} else {
+								bubble = `
+								<div class="incoming_msg mb-5">
+								  <div class="incoming_msg_img"> <img src="${resp[k]['sender_profile']}" alt="sunil"> </div>
+								  <div class="received_msg">
+									<div class="received_withd_msg chat-bubble" data-id="${resp[k].id}">
+										<div class="row"><p>${resp[k].message}</p></div> 
+									  <span class="time_date"> ${resp[k].date_created}</span>
+									  </div>
+								  </div>
+								</div>`;
+							
+							}
+                            
+                        } 
+						else {
+                            bubble = `
+								<div class="outgoing_msg mb-5">
+								  <div class="sent_msg chat-bubble" data-id="${resp[k].id}">
+									<p>${resp[k].message}</p>
+									<span class="time_date"> ${resp[k].date_created}</span>
+								  </div>
+								</div>`;
+                        }
+						
+                        // console.log(bubble)
+                        $('.chat-box').append(bubble)
+                        $('.chat-box').animate({
+                            scrollTop: $('.chat-bubble:last').offset().top * 1000
+                        }, 'fast')
+                    })
+                }
+            }
+        })
+    }
+</script>
+{% endblock %}
