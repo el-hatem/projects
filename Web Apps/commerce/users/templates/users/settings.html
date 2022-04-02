@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+    settings
+{% endblock %}
+{% block css %} <link href="{% static "users/styles/styles.css" %}" rel="stylesheet"> {% endblock %}
+
+
+{% block main %}
+  <h3>General Account Settings</h3>
+  <hr>
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
+
+<form>
+	<table>
+		{% crispy form %}
+	</table>
+</form>
+	<hr>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% for message in messages %}
+	{% if message.tags == "error" %}
+		<div id="message" class="alert alert-danger mx-auto" style="width:100%;" role="alert">
+     		<div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+		    <script type="text/javascript">
+		        const div = document.querySelector("#message");
+		          setTimeout(()=> {
+		              div.remove();
+		          }, 3000);
+		    </script>
+    	</div>
+    {% elif message.tags == "success" %}
+		<div id="message" class="alert alert-success mx-auto" style="width:100%;" role="alert">
+     		<div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+		    <script type="text/javascript">
+		        const div = document.querySelector("#message");
+		          setTimeout(()=> {
+		              div.remove();
+		          }, 3000);
+		    </script>
+    	</div>
+    {% else %}
+		<div id="message" class="alert alert-warning mx-auto" style="width:100%;" role="alert">
+     		<div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+		    <script type="text/javascript">
+		        const div = document.querySelector("#message");
+		          setTimeout(()=> {
+		              div.remove();
+		          }, 3000);
+		    </script>
+    	</div>
+	{% endif %}	
+{% endfor %}

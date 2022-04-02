@@ -1,0 +1,23 @@
+ <div class="col-12">
+    <input type="text" class="form-control text-center bg-warning" id="message" name="message" readonly value="this bid is closed">
+	{% if not bid.winner and not list.state %}
+		<b class="text text-center">bid owner has closed this bid before anyone can share in</b>
+	{% elif bid.winner == request.user and not list.state %}
+	    <b class="text text-success text-center">Conrats!! you have won this bid</b>
+	{% elif not list.state %}
+	    <b class="text text-center">bid winner is: [{{bid.winner}}]</b>
+   {% endif %}
+</div>
+{% if request.user.is_authenticated %}
+	<div class="col-12">
+		<form action="{% url 'auctions:modify_watchlist' list.id %}" method="GET">
+			{% if list in watch_lists %}
+				<input type="hidden" name="state" value="False">
+				<button type="submit" id="watch-btn" style="width: 80%;" class="btn mt-4 btn btn-outline-danger">remove from watchlist</button> 
+		   {% else %}
+			    <input type="hidden" name="state" value="True">
+			    <button type="submit" id="watch-btn" style="width: 80%;" class="btn mt-4 btn btn-outline-primary">Add to watchlist</button> 
+		    {% endif %}  
+		</form>
+	</div>
+{% endif %}
