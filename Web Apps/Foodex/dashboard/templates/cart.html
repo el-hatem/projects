@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{% static './icons/favicon.png' %}" type="">
+
+  <title> foodex: {% block title %}{% endblock %}</title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static './dashboard/css/bootstrap.css' %}" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="{% static './dashboard/css/font-awesome.min.css' %}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{% static './dashboard/css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static './dashboard/css/responsive.css' %}" rel="stylesheet" />
+  <link href="{% static './dashboard/css/cart.css' %}" rel="stylesheet" />
+</head>
+
+
+<body>
+    <!-- header section strats -->
+    <header class="bg-dark header_section">
+        <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="{% url 'dashboard:home' %}">
+            <span>
+                <img src="{% static 'favicon.png' %}" alt="">
+                foodex
+            </span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav px-0  mr-auto  mr-auto ">
+
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard:menu' %}">Main Menu</a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard:menu' %}">Book Table</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard:about' %}">About</a>
+                </li>
+            </ul>
+            <div class="user_option">
+                <form class="flex d-flex justifiy-content form-inline my-2 my-lg-0" style="width: auto;">
+                <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                    <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                    </div>
+                    <input class="form-control mr-sm-2" type="search" placeholder="search for.." aria-label="Search">
+                </div>
+                </form>
+                {% if request.user.is_authenticated %}
+                <div class="text-warning dropdown">
+                <a for="menu-d" class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
+                <div id="menu-d" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'dashboard:cart' %}"><i class="fa fa-cart-plus"></i> my cart</a>
+                    <a class="dropdown-item" href="{% url 'dashboard:watchlist' %}"><i class="fa fa-heart"></i> favourite</a>
+                    <a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fa fa-cog"></i> settings</a>
+                    <a class="dropdown-item" href="{% url 'users:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> logout</a>
+                </div>
+                </div>
+                {% else %}
+                <a href="{% url 'users:login' %}" class="user_link">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
+                {% endif %}
+
+                <a href="{% url 'orders:orders' %}" class="order_online">
+                Order Online
+                </a>
+            </div>
+            </div>
+        </nav>
+        </div>
+    <!-- end header section -->
+    </header>
+
+    <div class="mt-5 mb-5 container">
+        {% include 'includes/message.html' %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <span class="pull-right">(<strong>{{orders|length}}</strong>) items</span>
+                        <h5>Items in your cart</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table shoping-cart-table">
+                                <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td width="90">
+                                            <div class="cart-product-imitation">
+                                                <img style="width:100%;height:8vh;object-fit: contain;"  src="{{order.item.img}}" alt="">
+                                            </div>
+                                        </td>
+                                        <td class="desc">
+                                            <h3>
+                                            <a href="{% url 'dashboard:item' order.item.id %}" class="text-navy">
+                                                {{order.item.title}}
+                                            </a>
+                                            <small>{{order.orderid}}</small>
+                                            </h3>
+                                            <div class="m-t-sm">
+                                                <span class="mr-1"><small>size: {{order.size}}</small></span>    
+                                                <span class="ml-1"><small>type: {{order.type}}</small></span>
+                                            </div>
+
+                                            <div class="m-t-sm">
+                                                <a href="#" class="text-muted"><i class="fa fa-gift"></i> Add gift package</a>
+                                                |
+                                                <a href="{% url 'orders:removeorder' order.id %}" class="text-muted"><i class="fa fa-trash"></i> Remove item</a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            Qty: {{order.quantity}}
+                                            {% comment %} <s class="small text-muted">$230,00</s> {% endcomment %}
+                                        </td>
+        
+                                        <td>
+                                            ${{order.item.price}}
+                                            
+                                        </td>
+        
+                                        <td>
+                                            {% comment %} <s class="small text-muted">$230,00</s> {% endcomment %}
+                                            <h4>
+                                                ${{order.price}}
+                                                
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="ibox-content">
+                    
+                    <a href="{% url 'dashboard:menu' %}"> <button class="btn btn-white"><i class="fa fa-arrow-left"></i> Continue shopping</button></a>
+
+                </div>
+            </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Cart Summary</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <span>
+                            Total
+                        </span>
+                        {% if cart.state %}
+                            <h2 id="price" class="font-bold">
+                                {{cart.totalprice}} <label class="text-danger text-sm">+25</label> $
+                            </h2>
+                        {% else %}
+                        <h2 id="price" class="font-bold">
+                            {{cart.totalprice}} $
+                        </h2>
+                        {% endif %}
+                        <hr>
+                        <span class="text-muted small">
+                            *For all part of Egypt applicable sales tax will be applied
+                        </span>
+                        <div class="mx-auto mt-2 m-t-sm">
+                            {% if request.user.card %}
+                                {% if cart.state %}
+                                    <form action="{% url 'orders:pay' %}" method="post"> {% csrf_token %}
+                                        <div class="ml-1 form-group pull-right" style="margin:6px 10px 0 0">
+                                            <input type="checkbox" class="form-check-input" id="paid" name="paid" value="upon receipt">
+                                            <label class="form-check-label" for="paid">upon receipt</label>
+                                            <script>
+                                                check = document.querySelector('#paid');
+                                                price = document.querySelector('#price');
+                                                check.addEventListener('change', ()=> {
+                                                    if (check.checked) {
+                                                        alert('we kindly take delivery fees from your card')
+                                                    } 
+                                                });
+                                            </script>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm mb-2">Checkout</button>
+                                    </form> 
+                                {% else %}
+                                <h4>you have not add items yet. <a href="{% url 'orders:orders' %}">Order Now!!</a><h4>
+
+                                {% endif %}
+                      
+                            {% else %}
+                                <h4>you have not add card yet. please click <a href="{% url 'users:profile' %}">here</a> to add one<h4>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Support</h5>
+                    </div>
+                    <div class="ibox-content text-center">
+                        <h3><i class="fa fa-phone"></i> +201016909285</h3>
+                        <span class="small">
+                            Please contact with us if you have any questions. We are avalible 24h.
+                        </span>
+                    </div>
+                </div>
+ 
+<!-- jQery -->
+<script src="{% static './dashboard/js/jquery-3.4.1.min.js' %}"></script>
+<!-- popper js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<!-- bootstrap js -->
+<script src="{% static './dashboard/js/bootstrap.js' %}"></script>
+<!-- owl slider -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+</script>
+<!-- isotope js -->
+<script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+<!-- nice select -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+<!-- custom js -->
+<script src="{% static './dashboard/js/custom.js' %}"></script>
+<!-- Google Map -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+</script>
+<!-- End Google Map -->
+
+</body>
+</html>

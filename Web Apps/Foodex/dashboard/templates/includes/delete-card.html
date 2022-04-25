@@ -1,0 +1,30 @@
+
+<div class="modal fade" id="delete-card" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+					    <div class="text-right"> <i class="fa fa-close close" data-dismiss="modal"></i> </div>
+					  	<div class="tabs mt-3">
+              <div class="card">
+                <div class="card-body">
+                  <form role="form" action="{% url 'users:deletecard' %}" method="post"> {% csrf_token %}
+                  <div class="form-group">
+                    <p><small class="text-muted"><label class="text-danger">Warning</label> you will delete your current card. sure about that?.Please enter <strong>"your password"</strong> in the fllowing textbox</small><p>
+                    <div class="input-group input-group-sm mb-3">
+                      <input type="password" id="delete-cards" name="user-password" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+
+                  </div>
+                  <div class="form-group">
+
+                    <button type="submit" id="btndlts" class="btn btn-danger col-sm-12 mb-2">Delete</button>
+                    <button type="button" class="btn btn-secondary col-sm-12 mb-2" data-dismiss="modal">cancle</button>
+                  </div>
+                </form>
+                </div>
+              </div>
+				</div>
+			</div>
+		</div>
+    
+    

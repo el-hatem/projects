@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Menu</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css'>
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'><link rel="stylesheet" href="{% static './orders/css/style.css' %}">
+
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+    <!-- Header -->
+            <div class="container">
+                <div class="row">
+                    <!-- Logo -->
+                    <div class="col-lg-2 col-sm-3 col-3 order-1">
+                        <div class="logo_container">
+                            <div class="logo"><a href="{% url 'dashboard:home' %}">Food</a>ex</div>
+                        </div>
+                    </div> <!-- Search -->
+                    <div class="col-lg-6 col-12 order-lg-2 order-3 text-lg-left text-right">
+                        <div class="header_search">
+                            <div class="header_search_content">
+                                <div class="header_search_form_container">
+                                    <form action="#" class="header_search_form clearfix"> 
+										<input type="search" required="required" class="header_search_input" placeholder="Search for products...">
+										<button type="submit" class="btn-warning header_search_button trans_300" value="Submit"><img src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560918770/search.png" alt=""></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Wishlist -->
+                    <div class="col-lg-4 col-9 order-lg-3 order-2 text-lg-left text-right">
+                        <div class="wishlist_cart d-flex flex-row align-items-center justify-content-end">
+                            <div class="wishlist d-flex flex-row align-items-center justify-content-end">
+                                <div class="wishlist_icon"><img src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560918681/heart.png" alt=""></div>
+                                <div class="wishlist_content">
+                                    <div class="wishlist_text"><a href="{% url 'dashboard:watchlist' %}">Wishlist</a></div>
+                                    <div class="wishlist_count">{{favs|length}}</div>
+                                </div>
+                            </div> <!-- Cart -->
+                            <div class="cart">
+                                <div class="cart_container d-flex flex-row align-items-center justify-content-end">
+                                    <div class="cart_icon"> <img src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560918704/cart.png" alt="">
+                                        <div class="cart_count bg-warning"><span>{{orders|length}}</span></div>
+                                    </div>
+                                    <div class="cart_content">
+                                        <div class="cart_text"><a href="{% url 'dashboard:cart' %}">Cart</a></div>
+                                        <div class="cart_price">${{request.user.cart.totalprice}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+<div class="container bg-white">
+
+    <div class="row">
+        {% for item in items %}
+            <div {% if item.status == 'out of stock' %}style="pointer-events:none; opacity: 0.4;" {% endif %} class="col-lg-3 col-sm-6 d-flex flex-column align-items-center justify-content-center product-item my-3">
+                <div class="product"> <img src="{{item.img}}" alt="">
+                    <ul class="d-flex align-items-center justify-content-center list-unstyled icons">
+                       <a class="text-dark" href="{% url 'dashboard:item' item.id%}"><li class="icon"><span class="fas fa-expand-arrows-alt"></span></li></a>
+                       {% if item not in favs %}
+                        <a class="text-dark" href="{% url 'users:addwatchlist' item.id%}"><li  class="icon mx-3"><span class="far fa-heart"></span></li></a>
+                       {% else %}
+                       <a class="text-dark" href="{% url 'users:removewatchlist' item.id%}"><li style="background: #b71c1c" class="icon mx-3"><span class="far fa-heart"></span></li></a>
+                       {% endif %}
+                        <li class="icon" data-toggle="modal" data-target="#product_view{{item.id}}"><span class="fas fa-shopping-bag"></span></li>
+                    </ul>
+                </div>
+                {% if item.status == 'new' %}
+                <div class="tag bg-green">new</div>
+                {% elif item.status == 'sale' %}
+                <div class="tag bg-red">sale</div>
+                {% elif item.status == 'out of stock' %}
+                <div class="tag bg-black">out of stock</div>
+                {% endif %}
+                <div class="title pt-4 pb-1">{{item.title}}</div>
+                <div class="d-flex align-content-center justify-content-center"> {% for i in item.rating.all|ratesavg|inrange %}<span class="fas fa-star"></span>{% endfor %}{% for i in item.rating.all|ratesavg|diffrange %}<span class="text-dark fas fa-star"></span>{% endfor %}</div>
+                <div class="price">$ {{item.price}}</div>
+                {% include 'includes/orderitem.html' with item=item %}
+            </div>
+        {% endfor %}
+
+    </div>
+    
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+<script>
+(function(){
+ 
+  $("#cart").on("click", function() {
+    $(".shopping-cart").fadeToggle( "fast");
+  });
+  
+})();
+
+var numItems = $('.item-name').length;
+                
+ var sum = 0;
+$('.item-price').each(function(){
+ var thisPrice=$(this).text().replace("$", "");
+ thisPrice=parseFloat($(this).next().text().replace("Quantity: ", ""))*thisPrice;
+    sum += parseFloat(thisPrice);  // x quantity?
+});
+
+$('.badge').text(numItems);
+$('.main-color-text').text(sum.toFixed(2));
+</script>
+</body>
+
+</html>

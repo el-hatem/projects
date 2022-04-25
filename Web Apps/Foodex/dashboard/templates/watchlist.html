@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{% static './icons/favicon.png' %}" type="">
+
+  <title> foodex: {% block title %}{% endblock %}</title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static './dashboard/css/bootstrap.css' %}" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="{% static './dashboard/css/font-awesome.min.css' %}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{% static './dashboard/css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static './dashboard/css/responsive.css' %}" rel="stylesheet" />
+  <link href="{% static './dashboard/css/watchlist.css' %}" rel="stylesheet" />
+</head>
+
+
+<body>
+  
+
+<!-- header section strats -->
+<header class="bg-dark header_section">
+    <div class="container">
+    <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <a class="navbar-brand" href="{% url 'dashboard:home' %}">
+        <span>
+            <img src="{% static 'favicon.png' %}" alt="">
+            foodex
+        </span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class=""> </span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav px-0  mr-auto  mr-auto ">
+
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard:menu' %}">Main Menu</a>
+            </li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard:menu' %}">Book Table</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard:about' %}">About</a>
+            </li>
+        </ul>
+        <div class="user_option">
+            <form class="flex d-flex justifiy-content form-inline my-2 my-lg-0" style="width: auto;">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+                </div>
+                <input class="form-control mr-sm-2" type="search" placeholder="search for.." aria-label="Search">
+            </div>
+            </form>
+            {% if request.user.is_authenticated %}
+            <div class="text-warning dropdown">
+            <a for="menu-d" class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </a>
+            <div id="menu-d" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'dashboard:cart' %}"><i class="fa fa-cart-plus"></i> my cart</a>
+                <a class="dropdown-item" href="{% url 'dashboard:watchlist' %}"><i class="fa fa-heart"></i> favourite</a>
+                <a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fa fa-cog"></i> settings</a>
+                <a class="dropdown-item" href="{% url 'users:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> logout</a>
+            </div>
+            </div>
+            {% else %}
+            <a href="{% url 'users:login' %}" class="user_link">
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+
+            <a href="{% url 'orders:orders' %}" class="order_online">
+            Order Online
+            </a>
+        </div>
+        </div>
+    </nav>
+    </div>
+<!-- end header section -->
+</header>
+
+<!-- watchlist-->
+<div class="cart-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="main-heading mb-10">My wishlist</div>
+                <div class="table-wishlist">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="45%">Product Name</th>
+                                <th width="15%">Unit Price</th>
+                                <th width="15%">Stock Status</th>
+                                <th width="15%"></th>
+                                <th width="10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fav in favs %}
+                            <tr>
+                                <td width="45%">
+                                    <div class="display-flex align-center">
+                                        <div class="img-product">
+                                            <img style="width:100%;height:10vh;object-fit: contain;" src="{{fav.img}}" alt="" class="mCS_img_loaded">
+                                        </div>
+                                        <div class="name-product">
+                                            <a href="{% url 'dashboard:item' fav.id %}" class="text-dark">{{fav.title}} </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <td width="15%" class="price">${{fav.price}}</td>
+                                {% if fav.status == 'out of stock' %}
+                                    <td width="15%">
+                                        <span class="in-stock-box">out of stock</span>
+
+                                    </td>
+                                    <td width="15%">
+                                    <span><a href="{% url 'users:removewatchlist' fav.id %}" class="trash-icon"><i class="fa fa-trash"></i></a></span>
+                                    </td>
+
+                                {% else %}
+                                <td width="15%"><span class="in-stock-box" style="background: green;">in the stock</span></td>
+                                <td width="15%">
+                                    <span><a href="{% url 'users:removewatchlist' fav.id %}" class="trash-icon"><i class="fa fa-trash"></i></a></span>
+                                    <a href="" data-toggle="modal" data-target="#product_view{{fav.id}}" class="trash-icon ml-3"><i class="fa fa-cart-plus"></i></a>
+                                    {% include 'includes/orderitem.html' with item=fav %}
+                                </td>
+                                
+                                {% endif %}
+                            </tr>
+                            
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  <!-- jQery -->
+  <script src="{% static './dashboard/js/jquery-3.4.1.min.js' %}"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="{% static './dashboard/js/bootstrap.js' %}"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <!-- custom js -->
+  <script src="{% static './dashboard/js/custom.js' %}"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+</body>
+</html>

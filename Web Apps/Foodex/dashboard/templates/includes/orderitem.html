@@ -1,0 +1,89 @@
+
+<style>
+    .product_view .modal-dialog{max-width: 800px; width: 100%;}
+    .pre-cost{text-decoration: line-through; color: #a5a5a5;}
+    .space-ten{padding: 20px 0;}
+</style>
+<div class="text-dark modal fade product_view" id="product_view{{item.id}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 mx-auto product_img">
+                        <img style="object-fit: contain;" src="{{item.img}}" class="h-100 w-100">
+                    </div>
+                    <div class="col-md-8 product_content">
+                        <h3 class="modal-title">{{item.title}}</h3>
+
+                        <div class="rating">
+                             {% for i in item.rating.all|ratesavg|inrange %}<span class="text-warning fa fa-star"></span>{% endfor %}{% for i in item.rating.all|ratesavg|diffrange %}<span class="text-dark fa fa-star"></span>{% endfor %}
+                            ({{item.rating.all|length}} reviews)
+                        </div>
+                        <p>{{item.description}}</p>
+                        <h3 class="cost"><span class="glyphicon glyphicon-usd"></span>Price: {{item.price}}$</h3>
+                        <div class="row">
+                         <form class="row form-group" action="{% url 'orders:order' item.id %}" method="post"> {% csrf_token %}
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <select class="form-control" name="size" required>
+                                    <option selected disabled>size</option>
+                                    {% if item.category in 'pasta, burger, pizza, salads' %}
+                                        <option value="large">Large</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="small">Small</option>
+                                    {% elif item.category == 'drinks' %}
+                                        <option value="330ml">330ml</option>
+                                        <option value="1 Litre">1 Litre</option>
+                                        <option value="2 Litres">2 Litres</option>
+                                        <option value="2.5 Litres">2.5 Litres</option>
+                                    {% elif item.category == 'dessert' %}
+                                        <option value="250g">250g</option>
+                                        <option value="500g">500g</option>
+                                        <option value="1 Kg">1 Kg</option>
+                                        <option value="2 Kg">2 Kg</option>
+                                        <option value="2.5 Kg">2.5 Kg</option>
+                                        <option value="5 Kg">5 Kg</option>
+                                        <option value="10 Kg">10 Kg</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <!-- end col -->
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <select class="form-control" name="type" required>
+                                    <option selected disabled>Type</option>
+                                    {% if item.category in 'pizza, burger, pasta, salads' %}
+                                        <option value="mild">Mild</option>
+                                        <option value="spicy">Spicy</option>
+                                    {% elif item.category == 'drinks' %}
+                                        <option value="diet">Diet</option>
+                                        <option value="no-diet">No Diet</option>
+                                    {% elif item.category == 'dessert' %}
+                                        <option value="classic">classic</option>
+                                        <option value="chocolatty">chocolatty</option>
+                                        <option value="nutty">nutty</option>
+                                        <option value="chocolatty-nutty">chocolatty-nutty</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <!-- end col -->
+                            <div class="col-md-4 col-sm-12">
+                                <input type="number" class="form-control" name="quantity" value="1" id="qty" min="1" placeholder="QTY">
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <div class="space-ten"></div>
+                        <div class="mr-auto float-right">
+                             <button type="submit" class="btn btn-primary"><i class="fa fa-cart-plus"></i> Add to Cart</button>
+                            {% if item in request.user.favourites.all %}
+                                <a href="{% url 'users:removewatchlist' item.id %}"> <button type="button" class="btn btn-danger"><i class="fa fa-heart"></i> Remove from Wishlist</button></a>
+                            {% else %}
+                                <a href="{% url 'users:addwatchlist' item.id %}"> <button type="button" class="btn btn-primary"><i class="fa fa-heart"></i> Add to Wishlist</button></a>
+                            {% endif %}
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

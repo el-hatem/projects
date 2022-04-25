@@ -1,0 +1,133 @@
+{% extends './layout.html' %}
+{% load static %}
+{% block title %}Register{% endblock  %}
+{% block main %}
+<!-- start section -->
+<section class="vh-100">
+    <div class="container-fluid">
+      <div class="row-8">
+        <!-- start block-->
+        <div class="col-sm-6 text-black">
+          <div class="px-5 ms-xl-4">
+            <i class="fa fa-crow fa-2x me-3 pt-5 mt-xl-4"></i>
+            <span class="h1 fw-bold mb-0 "></span>
+          </div>
+
+          <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+            
+            <!--start form-->
+            <form action="{% url 'users:register' %}" method="POST" style="width: 23rem;"> 
+              {% csrf_token %}
+              <h3 class="fw-normal mb-3 pb-3 text-white" style="letter-spacing: 1px;">Sign Up</h3>
+              {% include 'includes/message.html' %}
+              <!-- start names-->
+              <div class="row mb-2">
+                <div class="col-sm-6 form-outline">
+                  <label class="form-label text-white" for="first_name">First Name</label>
+                  <input type="text" id="first_name" name="first_name" class="form-control form-control" placeholder='first name' required/>
+                </div>
+                <div class="col-sm-6 form-outline">
+                  <label class="form-label text-white" for="last_name">Last Name</label>
+                  <input type="text" id="last_name" name="last_name" class="form-control form-control" placeholder='last name' required/>
+                </div>
+              </div>
+              <!-- end name-->
+
+              <!-- start username -->
+              <div class="form-outline mb-2">
+                <label class="form-label text-white" for="username">username</label>
+                <input type="text" id="username" name="username" class="form-control form-control" placeholder=' username' required/>
+              </div>
+              <!-- end username -->
+
+              <!-- start passwords -->
+              <div class="row mb-2">
+                <div class="col-sm-6 form-outline">
+                  <label class="form-label text-white" for="password">Password</label>
+                  <input type="password" id="password" name="password" class="form-control form-control" placeholder='password' required/>
+                </div>
+                <div class="col-sm-6 form-outline">
+                  <label class="form-label text-white" for="confitm-password">Confirm Password</label>
+                  <input type="password" id="confitm-password" name="confirm_password" class="form-control form-control" placeholder='confirm password' required/>
+                </div>
+            </div>
+            <!-- end passwords-->
+            
+            <!-- start other -->
+            <div class="row mb-4">
+              <!-- start phone-->
+              <div class="col-sm-6 form-outline">
+                <label class="form-label text-white" for="phone">phone</label>
+                <input type="tel" id="phone" name="phone" class="form-control form-control" placeholder='phone number' pattern="^01[0-2,5]{1}[0-9]{8}$" required/>
+              </div>
+              <!-- end phone-->
+
+              <!-- start location -->
+              <div class="col-sm-6 form-outline">
+                <label class="form-label text-white" for="location">location</label>
+                <input type="text" id="location" name="location" class="form-control form-control" placeholder='address' required/>
+              </div>
+              <!-- end location -->
+            </div>
+            <!-- end others -->
+
+              <!-- submit-->
+              <div class="pt-0 mb-2">
+                <button class="btn btn-warning btn-block" type="submit">Sign Up</button>
+              </div>
+              <!-- end passwords -->
+
+              <!-- start options -->
+              <div class="row">
+                <div class="col-sm-12 d-flex justify-content-center text-center">
+                  <a id="ask-for-login" class="text-primary" href="{% url 'users:login' %}">i Have an account</a> 
+                </div>
+              </div>
+              <!-- end options -->          
+            </form>
+            <!-- End from -->
+          </div>
+        </div>  
+</section>
+<!-- end section -->
+<script>
+  var loc = document.querySelector('#location');
+
+  function getReverseGeocodingData(pos) {
+    var latlng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+    // This is making the Geocode request
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': latlng },  (results, status) =>{
+        if (status !== google.maps.GeocoderStatus.OK) {
+            alert(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+            var address = (results[0].formatted_address);
+            loc.value = address;
+        }
+    });
+  }
+  function displayError () {
+    alert('Sorry location not found :(');
+  }
+  loc.addEventListener('click', () => {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+    /*empty string*/
+    if (loc.value.length > 0){
+        loc.value = '';
+    }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getReverseGeocodingData, displayError, options);
+    } else { 
+      alert("Geolocation is not supported by this browser.");
+    }
+  });
+</script> 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPQ7PC_2JN_9jNw4z3N-PIsOtJF6HY-Hs&libraries=places&callback=initMap" async defer></script>
+
+{% endblock  %}

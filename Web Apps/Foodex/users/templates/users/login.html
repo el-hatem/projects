@@ -1,0 +1,48 @@
+{% extends './layout.html' %}
+{% load static %}
+{% block  title %}Login{% endblock  %}
+{% block main %}
+<section class="vh-100">
+    <div class="container-fluid">
+      <div class="row-8">
+        <div class="col-sm-6 text-black">
+  
+          <div class="px-5 ms-xl-4">
+            <i class="fa fa-crow fa-2x me-3 pt-5 mt-xl-4"></i>
+            <span class="h1 fw-bold mb-0 "></span>
+          </div>
+  
+          <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+  
+            <form action="{% url 'users:login' %}" method="POST" style="width: 23rem;"> {% csrf_token %}
+              <h3 class="fw-normal mb-3 pb-3 text-white" style="letter-spacing: 1px;">Log in</h3>
+              {% include 'includes/message.html' %}
+              <div class="form-outline mb-2">
+                <label class="form-label text-white" for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control form-control" placeholder='type your username' required/>
+              </div>
+  
+              <div class="form-outline mb-4">
+                <label class="form-label text-white" for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control form-control" placeholder='type your password' required/>
+              </div>
+
+              <div class="row pt-0 mb-4">
+                <div class="col-sm-12 d-flex justify-content-center text-center">
+                    <button class="btn btn-warning btn-block" type="submit">Login</button>
+                </div>
+              </div>
+
+              <div class="row pt-0 mb-2">
+                <div class="col-sm-12 d-flex justify-content-center text-center">
+                    <a id="ask-for-password" class=" text-primary col-sm-6 mx-sm-auto" href="#">Forgot password?</a>
+                    <a id="ask-for-register" class=" text-primary col-sm-6 mx-sm-auto" href="{% url 'users:register' %}">Haven't Registered?</a>
+                </div>
+              </div>
+            </form>
+  
+          </div>
+  
+        </div>  
+</section>
+{% endblock  %}

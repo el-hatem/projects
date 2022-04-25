@@ -1,0 +1,13 @@
+<div class="small text-muted mb-3">This is your card details for this account</div>
+    <div class="row">
+		<div class="col mb-lg-0 mb-3">
+			<div class="card p-2 mx-auto">
+				<div class="img-box"> <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg" alt=""> </div>
+				<div class="number"> <label style="font-size: 22px;" class="fw-bold" for="">{{request.user.card.cardnumber}}</label> </div>
+				<div class="d-flex align-items-center justify-content-between"> <small><span class="fw-bold">Expiry date:</span><span>{{request.user.card.expired_date.month}}/{{request.user.card.expired_date.year}} </span></small> <small><span class="fw-bold">Name:</span><span>{{request.user.card.cardowner}}</span></small> </div>
+			</div>
+		</div>
+    </div>
+    <button class="btn btn-primary mt-2 mx-auto col-sm-3" type="button" data-toggle="modal" data-target="#changecard"> Change Card</button>
+    <button class="btn btn-danger mt-2 mx-auto col-sm-3" type="button" data-toggle="modal" data-target="#delete-card"> Delete Card</button>
+    <hr>
