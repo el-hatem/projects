@@ -107,8 +107,8 @@ class Tables(models.Model):
     email                 = models.CharField(max_length=50, null=True, blank=True)
     phone                 =  models.CharField(max_length=11, null=False, blank=False)
     count                 = models.IntegerField()
-    date                  = models.DateField(auto_now_add=True)
-    time                  = models.TimeField(auto_now_add=True)
+    date                  = models.DateField()
+    time                  = models.TimeField()
     
 
     class Meta:
